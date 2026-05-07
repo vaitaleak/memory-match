@@ -1,0 +1,58 @@
+name: Build APK
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: npm install
+
+      - name: Get version from tag
+        id: version
+        run: |
+          VER="${GITHUB_REF_NAME#v}"
+          echo "version=$VER" >> $GITHUB_OUTPUT
+          MAJOR=$(echo "$VER" | cut -d. -f1)
+          MINOR=$(echo "$VER" | cut -d. -f2)
+          CODE=$((MAJOR * 100 + MINOR))
+          echo "versionCode=$CODE" >> $GITHUB_OUTPUT
+
+      - name: Prebuild
+        run: npx expo prebuild --platform android --clean
+
+      - name: Update versions in build files
+        run: |
+          VER=${{ steps.version.outputs.version }}
+          CODE=${{ steps.version.outputs.versionCode }}
+          sed -i "s/versionCode .*/versionCode $CODE/" android/app/build.gradle
+          sed -i "s/versionName \".*\"/versionName \"$VER\"/" android/app/build.gradle
+
+      - name: Build APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: android/app/build/outputs/apk/release/app-release.apk

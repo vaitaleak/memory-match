@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Memory Match",
+    "slug": "memory-match",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "android": {
+      "package": "com.usefullapps.memorymatch",
+      "versionCode": 1
+    }
+  }
+}
