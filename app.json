@@ -13,9 +13,6 @@
       },
       "package": "com.usefullapps.memorymatch",
       "versionCode": 1
-    },
-    "plugins": [
-      "expo-router"
-    ]
+    }
   }
 }
