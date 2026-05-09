@@ -1,7 +1,21 @@
 {
-  "name": "memorymatch",
-  "displayName": "Memory Match",
-  "android": {
-    "package": "com.usefullapps.memorymatch"
+  "expo": {
+    "name": "Memory Match",
+    "slug": "memory-match",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.usefullapps.memorymatch",
+      "versionCode": 1
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }

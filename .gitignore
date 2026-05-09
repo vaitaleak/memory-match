@@ -1,6 +1,9 @@
 node_modules/
 .expo/
+android/
+ios/
 *.jks
+*.keystore
 build/
 .DS_Store
 *.tgz
