@@ -41,11 +41,11 @@ function CardView({ card, onPress, size, disabled }: { card: Card; onPress: () =
     setTimeout(() => setShowFront(target === 1), 150);
   }, [card.flipped, card.matched]);
 
-  const rotateY = flipAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
+  const scaleX = flipAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [1, 0, 1] });
 
   return (
     <TouchableOpacity onPress={disabled ? undefined : onPress} activeOpacity={0.7}>
-      <Animated.View style={[styles.card, { width: size, height: size }, { transform: [{ perspective: 800 }, { rotateY }] }]}>
+      <Animated.View style={[styles.card, { width: size, height: size }, { transform: [{ perspective: 800 }, { scaleX }] }]}>
         {showFront ? (
           <View style={[styles.cardFront, card.matched && styles.cardMatched]}>
             <Text style={styles.emoji}>{card.emoji}</Text>
@@ -83,44 +83,47 @@ export default function App() {
 
   const handleCard = useCallback((id: number) => {
     if (lockRef.current || won) return;
-    const card = cards.find(c => c.id === id);
-    if (!card || card.flipped || card.matched) return;
-    if (flipped.includes(id)) return;
+    setCards(prev => {
+      const card = prev.find(c => c.id === id);
+      if (!card || card.flipped || card.matched) return prev;
+      if (flipped.includes(id)) return prev;
 
-    if (!started) setStarted(true);
+      if (!started) setStarted(true);
 
-    const newFlipped = [...flipped, id];
-    setCards(prev => prev.map(c => c.id === id ? { ...c, flipped: true } : c));
+      const newFlipped = [...flipped, id];
+      const updated = prev.map(c => c.id === id ? { ...c, flipped: true } : c);
 
-    if (newFlipped.length === 2) {
-      lockRef.current = true;
-      setMoves(m => m + 1);
-      const [a, b] = newFlipped;
-      const cardA = cards.find(c => c.id === a)!;
-      const cardB = cards.find(c => c.id === b)!;
+      if (newFlipped.length === 2) {
+        lockRef.current = true;
+        setMoves(m => m + 1);
+        const [a, b] = newFlipped;
+        const cardA = updated.find(c => c.id === a)!;
+        const cardB = updated.find(c => c.id === b)!;
 
-      if (cardA.emoji === cardB.emoji) {
-        setTimeout(() => {
-          setCards(prev => prev.map(c => c.id === a || c.id === b ? { ...c, matched: true } : c));
-          setMatches(m => {
-            const nm = m + 1;
-            if (nm === s.pairs) setWon(true);
-            return nm;
-          });
-          setFlipped([]);
-          lockRef.current = false;
-        }, 400);
+        if (cardA.emoji === cardB.emoji) {
+          setTimeout(() => {
+            setCards(p => p.map(c => c.id === a || c.id === b ? { ...c, matched: true } : c));
+            setMatches(m => {
+              const nm = m + 1;
+              if (nm === s.pairs) setWon(true);
+              return nm;
+            });
+            setFlipped([]);
+            lockRef.current = false;
+          }, 400);
+        } else {
+          setTimeout(() => {
+            setCards(p => p.map(c => c.id === a || c.id === b ? { ...c, flipped: false } : c));
+            setFlipped([]);
+            lockRef.current = false;
+          }, 800);
+        }
       } else {
-        setTimeout(() => {
-          setCards(prev => prev.map(c => c.id === a || c.id === b ? { ...c, flipped: false } : c));
-          setFlipped([]);
-          lockRef.current = false;
-        }, 800);
+        setFlipped(newFlipped);
       }
-    } else {
-      setFlipped(newFlipped);
-    }
-  }, [cards, flipped, won, started, s.pairs]);
+      return updated;
+    });
+  }, [flipped, won, started, s.pairs]);
 
   const newGame = useCallback((idx: number) => {
     setSizeIdx(idx);
@@ -186,7 +189,7 @@ const styles = StyleSheet.create({
   stats: { flexDirection: 'row', gap: 20, marginBottom: 12 },
   stat: { color: '#ccc', fontSize: 15, fontWeight: '600' },
   board: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingHorizontal: 10 },
-  card: { margin: 2 },
+  card: { },
   cardFront: { flex: 1, backgroundColor: '#2a2a5e', borderRadius: 8, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#4a4a8e' },
   cardMatched: { backgroundColor: '#1a4a1a', borderColor: '#2d8a2d' },
   cardBack: { flex: 1, backgroundColor: '#3a1a5e', borderRadius: 8, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#6a3a9e' },
