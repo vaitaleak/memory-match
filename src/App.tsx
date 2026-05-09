@@ -3,7 +3,6 @@ import {
   StyleSheet, View, Text, TouchableOpacity, Dimensions,
   SafeAreaView, Animated,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 
 const { width } = Dimensions.get('window');
 const EMOJIS = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🦄','🐝','🦋','🐢'];
@@ -138,7 +137,6 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
       <Text style={styles.title}>Memory Match</Text>
 
       <View style={styles.sizes}>

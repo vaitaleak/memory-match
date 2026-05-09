@@ -1,26 +1,19 @@
 {
   "name": "memory-match",
-  "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
-  "private": true,
+  "version": "1.0.1",
+  "main": "src/App.tsx",
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android"
+    "start": "react-native start",
+    "android": "react-native run-android"
   },
   "dependencies": {
-    "expo": "~52.0.0",
-    "expo-status-bar": "~2.0.0",
-    "expo-asset": "~11.0.0",
-    "expo-constants": "~17.0.0",
-    "expo-file-system": "~18.0.0",
-    "expo-font": "~13.0.0",
-    "expo-modules-core": "~2.0.0",
     "react": "18.3.1",
     "react-native": "0.76.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
-    "@types/react": "~18.3.0",
-    "typescript": "~5.3.3"
+    "@types/react": "~18.3.12",
+    "typescript": "~5.3.3",
+    "@react-native-community/cli": "^15.0.0",
+    "@react-native-community/cli-platform-android": "^15.0.0"
   }
 }

@@ -29,9 +29,9 @@ jobs:
         run: |
           VER="${GITHUB_REF_NAME#v}"
           echo "version=$VER" >> $GITHUB_OUTPUT
-
-      - name: Prebuild native code
-        run: npx expo prebuild --platform android --clean
+          # Update versionCode and versionName
+          sed -i "s/versionCode .*/versionCode $(echo $VER | tr -d '.[:alpha:]')/ " android/app/build.gradle
+          sed -i "s/versionName \".*\"/versionName \"$VER\"/" android/app/build.gradle
 
       - name: Build APK
         working-directory: android
