@@ -24,6 +24,11 @@ jobs:
 
       - run: npm install
 
+      - name: Setup autolinking
+        run: |
+          mkdir -p android/build/generated/autolinking
+          cp android/autolinking.json android/build/generated/autolinking/
+
       - name: Build APK
         working-directory: android
         run: ./gradlew assembleRelease
