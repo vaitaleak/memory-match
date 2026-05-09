@@ -1,7 +1,11 @@
 module.exports = {
   project: {
     android: {
-      unstable_reactLegacyComponentNames: ['RCTImageView'],
+      packageName: 'com.usefullapps.memorymatch',
+      sourceDir: './android',
+      appName: 'memorymatch',
+      manifestPath: './app/src/main/AndroidManifest.xml',
     },
+    ios: {},
   },
 };
