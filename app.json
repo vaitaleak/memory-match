@@ -1,5 +1,5 @@
 {
-  "name": "Memory Match",
+  "name": "memorymatch",
   "displayName": "Memory Match",
   "android": {
     "package": "com.usefullapps.memorymatch"
